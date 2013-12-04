@@ -9,28 +9,50 @@ function newGame(){
 	numberGuesses=0; 
 	$("#inputbox").val(""); 
 	$("#message").text("Are you ready to play? Good Luck!"); 
-	$("#guesses").text("")
+	$("#guesses").text("");
 } 
 
-$("#submit").click(function(){  
+function newGuess() {
 	guess=$("#inputbox").val(); 
-	numberGuesses++; 
-	$("#guesses").text("Number of guesses: " + numberGuesses); 
-	hotorCold(guess); 
+	if (isNaN(guess)){
+		$("#message").text("This is not a number! Please choose a number."); 
+	}		 							   
+	else {
+		numberGuesses++; 
+		$("#guesses").text("Number of guesses: " + numberGuesses); 
+		hotorCold(guess);
+	}
+}
+
+$("#submit").click(function(e){
+	newGuess();
+});
+
+$("#submit").keydown(function(e){
+    if(e.keyCode == 13){
+       newGuess();
+    }
+});
+
+$("#inputbox").keydown(function(e){
+  if (e.keyCode == 13) {
+    $("#submit").click();
+	return false;
+  }
 });
 
 function hotorCold(userInput){ 
 	var absoluteGuess = Math.abs(randomNumber-userInput); 
 	if (numberGuesses <10){  
-		if (isNaN(userInput)) { 
+		if (userInput==randomNumber){					
+			$("message").text("Congratulations! You guessed the right number!"); 
+		} 	
+		else if (isNaN(userInput)) { 
 			$("#message").text("This is not a number! Please choose a number."); 
 		}	
 		else if (userInput>100 || userInput<1)	{
 			$("#message").text("Oops! Remember to choose a number between 1 and 100.")
 		}											   
-		else if (userInput==randomNumber){					
-			$("message").text("Congratulations! You guessed the right number!"); 
-		} 														
 		else if (absoluteGuess <=5){  
 			$("#message").text("Getting very hot!");
 		}
